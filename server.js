@@ -15,7 +15,6 @@ app.get("/", function(request, response) {
     response.send("nueva API");
 });
 
-
 const albumsData = [{
         albumId: "10",
         artistName: "Beyoncé",
@@ -47,36 +46,35 @@ const albumsData = [{
 
 app.get("/albums/:albumId", (req, res) => {
     const id = req.params.albumId;
-    const album = albumsData.filter(el => el.albumId === id);
+    const album = albuns.filter(el => el.albumId === id);
     res.json(album);
 });
 
-app.post("/albums", (req, res) => {
+app.post("/albums/addNew", (req, res) => {
     console.log("POST /album route");
     const newAlbum = req.body;
-    let maxId = Math.max(...albumsData.map((el) => el.albumId));
+    let newAlbumData = albuns;
+    let maxId = Math.max(...newAlbumData.map((el) => el.albumId));
     newAlbum.albumId = `${maxId + 1}`;
-    let newAlbumData = albumsData;
     newAlbumData.push(newAlbum);
-    fs.writeFileSync("./albumsData.json", JSON.stringify(newAlbumData));
+    fs.writeFile("./albumsData.json", JSON.stringify(newAlbumData), () => {});
     res.send("POST album");
 });
 
 app.delete("/albums/:albumId", (req, res) => {
     console.log("DELETE /albums route");
     const albumId = req.params.albumId;
-    const album = albumsData.filter((el) => {
+    const album = albuns.filter((el) => {
         el.albumId === albumId;
     });
-    const index = albumsData.indexOf(album[0]);
-    let newAlbumData = albumsData;
+    let index = albuns.indexOf(album[0]);
+    let newAlbumData = albuns;
     newAlbumData.splice(index, 1);
-    fs.writeFileSync("./albumsData.json", JSON.stringify(newAlbumData));
+    fs.writeFileSync("./albumsData.json", JSON.stringify(newAlbumData), () => {});
     res.status(200).json({ succes: true });
 });
 
-
-app.get("/songs", function(req, res) {
+app.get("/albums", function(req, res) {
     res.json(albuns);
 });
 
